@@ -56,10 +56,15 @@ header {
   letter-spacing: -0.5px;
 }
 
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .nav-links a {
   color: var(--text-primary);
   text-decoration: none;
-  margin-left: 24px;
   font-size: 0.95rem;
   font-weight: 500;
   transition: opacity 0.2s;
@@ -169,12 +174,19 @@ header {
   transform: translateY(-2px);
   background: #1A1A1A;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Header specific button adjustment */
+header .btn-download {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  border-radius: 12px;
 }
 
 .btn-download svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   fill: currentColor;
 }
 
