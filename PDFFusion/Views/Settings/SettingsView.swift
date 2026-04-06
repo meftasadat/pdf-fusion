@@ -3,7 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(PDFViewModel.self) private var viewModel
 
-    @AppStorage("defaultCompressionQuality") private var defaultQuality = "Medium"
+    @AppStorage("defaultCompressionLevel") private var defaultCompressionLevel = 50
     @AppStorage("showThumbnails") private var showThumbnails = true
     @AppStorage("autoOpenAfterSave") private var autoOpenAfterSave = true
 

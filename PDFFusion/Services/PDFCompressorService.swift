@@ -224,7 +224,7 @@ actor PDFCompressorService {
         // Fallback: use our JPEG-based compression
         return try compress(
             inputURL: inputURL,
-            settings: CompressionSettings(quality: .medium, isEnabled: true),
+            settings: CompressionSettings(compressionLevel: 0.5, isEnabled: true),
             outputURL: output,
             progress: progress
         )
