@@ -3,7 +3,7 @@ import Foundation
 /// Settings for PDF compression using a continuous compression level
 struct CompressionSettings {
     /// Compression level from 0.0 (no compression / best quality) to 1.0 (max compression / smallest file)
-    var compressionLevel: Double = 0.5
+    var compressionLevel: Double = 0.1
     var isEnabled: Bool = false
 
     /// Display percentage (0–100)
@@ -12,17 +12,17 @@ struct CompressionSettings {
     }
 
     /// Target DPI for image downsampling
-    /// Ranges from 300 DPI (level 0) down to 36 DPI (level 1)
+    /// Ranges from 150 DPI (level 0) down to 36 DPI (level 1)
     var targetDPI: CGFloat {
-        let maxDPI: Double = 300
+        let maxDPI: Double = 150
         let minDPI: Double = 36
         return CGFloat(maxDPI - (compressionLevel * (maxDPI - minDPI)))
     }
 
     /// JPEG quality factor (0.0 - 1.0)
-    /// Ranges from 0.95 (level 0) down to 0.1 (level 1)
+    /// Ranges from 0.60 (level 0) down to 0.1 (level 1)
     var imageQuality: CGFloat {
-        let maxQuality: Double = 0.95
+        let maxQuality: Double = 0.60
         let minQuality: Double = 0.1
         return CGFloat(maxQuality - (compressionLevel * (maxQuality - minQuality)))
     }

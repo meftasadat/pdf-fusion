@@ -286,8 +286,8 @@ actor PDFCompressorService {
 
     /// Fallback estimate using a simple ratio
     private static func fallbackEstimate(originalSize: Int64, level: Double) -> Int64 {
-        // At level 0: ~90% of original, at level 1: ~5% of original
-        let ratio = 0.90 - (level * 0.85)
+        // At level 0 (150 DPI): ~50% of original, at level 1 (36 DPI): ~5% of original
+        let ratio = 0.50 - (level * 0.45)
         return max(1024, Int64(Double(originalSize) * ratio))
     }
 
