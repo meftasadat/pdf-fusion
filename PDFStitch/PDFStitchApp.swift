@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct PDFFusionApp: App {
+struct PDFStitchApp: App {
     @State private var viewModel = PDFViewModel()
 
     var body: some Scene {

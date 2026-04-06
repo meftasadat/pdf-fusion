@@ -23,8 +23,8 @@ jobs:
 
       - name: Build Release
         run: |
-          xcodebuild -project PDFFusion.xcodeproj \
-            -scheme PDFFusion \
+          xcodebuild -project PDFStitch.xcodeproj \
+            -scheme PDFStitch \
             -configuration Release \
             -derivedDataPath build \
             CODE_SIGN_IDENTITY="-" \
@@ -38,22 +38,22 @@ jobs:
           
           # create-dmg may return exit code 2 if it can't set background, but DMG is still valid
           create-dmg \
-            --volname "PDF Fusion" \
+            --volname "PDF Stitch" \
             --window-pos 200 120 \
             --window-size 600 400 \
             --icon-size 100 \
-            --icon "PDF Fusion.app" 150 190 \
-            --hide-extension "PDF Fusion.app" \
+            --icon "PDF Stitch.app" 150 190 \
+            --hide-extension "PDF Stitch.app" \
             --app-drop-link 450 190 \
-            "PDFFusion-${GITHUB_REF_NAME}.dmg" \
-            "$APP_DIR/PDF Fusion.app" || true
+            "PDFStitch-${GITHUB_REF_NAME}.dmg" \
+            "$APP_DIR/PDF Stitch.app" || true
           
           # Verify DMG was created
-          ls -la PDFFusion-*.dmg
+          ls -la PDFStitch-*.dmg
 
       - name: Upload Release
         uses: softprops/action-gh-release@v2
         with:
-          files: PDFFusion-*.dmg
+          files: PDFStitch-*.dmg
           generate_release_notes: true
           draft: false

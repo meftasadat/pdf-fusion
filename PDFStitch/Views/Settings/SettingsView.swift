@@ -86,7 +86,7 @@ struct SettingsView: View {
                                     .foregroundStyle(Color.accentGradient)
 
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text("PDF Fusion")
+                                    Text("PDF Stitch")
                                         .font(.system(size: 16, weight: .bold, design: .rounded))
                                         .foregroundColor(.textPrimary)
 

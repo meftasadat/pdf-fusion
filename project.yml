@@ -1,6 +1,6 @@
-name: PDFFusion
+name: PDFStitch
 options:
-  bundleIdPrefix: com.pdffusion
+  bundleIdPrefix: com.pdfstitch
   deploymentTarget:
     macOS: "14.0"
   xcodeVersion: "16.0"
@@ -14,28 +14,28 @@ settings:
     DEVELOPMENT_TEAM: ""
     CODE_SIGN_IDENTITY: "-"
     CODE_SIGN_STYLE: Automatic
-    PRODUCT_BUNDLE_IDENTIFIER: com.pdffusion.app
+    PRODUCT_BUNDLE_IDENTIFIER: com.pdfstitch.app
 
 targets:
-  PDFFusion:
+  PDFStitch:
     type: application
     platform: macOS
     deploymentTarget: "14.0"
     sources:
-      - path: PDFFusion
+      - path: PDFStitch
         type: group
     settings:
       base:
-        INFOPLIST_KEY_CFBundleDisplayName: "PDF Fusion"
+        INFOPLIST_KEY_CFBundleDisplayName: "PDF Stitch"
         INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.utilities"
-        INFOPLIST_KEY_NSHumanReadableCopyright: "Copyright © 2026 PDF Fusion. All rights reserved."
-        PRODUCT_NAME: "PDF Fusion"
+        INFOPLIST_KEY_NSHumanReadableCopyright: "Copyright © 2026 PDF Stitch. All rights reserved."
+        PRODUCT_NAME: "PDF Stitch"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        CODE_SIGN_ENTITLEMENTS: PDFFusion/PDFFusion.entitlements
+        CODE_SIGN_ENTITLEMENTS: PDFStitch/PDFStitch.entitlements
         GENERATE_INFOPLIST_FILE: YES
         CURRENT_PROJECT_VERSION: 4
         MARKETING_VERSION: 1.0.4
         SWIFT_EMIT_LOC_STRINGS: YES
         ENABLE_PREVIEWS: YES
     entitlements:
-      path: PDFFusion/PDFFusion.entitlements
+      path: PDFStitch/PDFStitch.entitlements

@@ -296,7 +296,7 @@ actor PDFCompressorService {
     /// Generates a temporary file URL for the compressed output
     private static func generateTempURL() -> URL {
         let tempDir = FileManager.default.temporaryDirectory
-        let fileName = "PDFFusion_Compressed_\(Self.timestamp()).pdf"
+        let fileName = "PDFStitch_Compressed_\(Self.timestamp()).pdf"
         return tempDir.appendingPathComponent(fileName)
     }
 

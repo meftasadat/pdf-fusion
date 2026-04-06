@@ -13,7 +13,7 @@ struct SidebarView: View {
                     .font(.system(size: 32, weight: .medium))
                     .foregroundStyle(Color.accentGradient)
 
-                Text("PDF Fusion")
+                Text("PDF Stitch")
                     .font(.system(size: 18, weight: .bold, design: .rounded))
                     .foregroundColor(.textPrimary)
             }

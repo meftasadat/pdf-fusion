@@ -71,7 +71,7 @@ actor PDFMergerService {
     /// Generates a temporary file URL for the merged output
     private static func generateTempURL() -> URL {
         let tempDir = FileManager.default.temporaryDirectory
-        let fileName = "PDFFusion_Merged_\(Self.timestamp()).pdf"
+        let fileName = "PDFStitch_Merged_\(Self.timestamp()).pdf"
         return tempDir.appendingPathComponent(fileName)
     }
 
