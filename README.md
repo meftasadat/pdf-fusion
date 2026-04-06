@@ -8,6 +8,24 @@ A lightning-fast, completely native macOS application designed to effortlessly *
 ![License](https://img.shields.io/badge/License-MIT-green)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=flat&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/meftasadat)
 
+<div align="center">
+  <br/>
+  <a href="https://github.com/meftasadat/pdf-fusion/releases/download/v1.0.4/PDFFusion-v1.0.4.dmg">
+    <img src="https://img.shields.io/badge/Download_for_Mac-v1.0.4-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download for Mac" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://meftasadat.github.io/pdf-fusion/">
+    <img src="https://img.shields.io/badge/Official_Website-Visit_Now-0052FF?style=for-the-badge&logo=safari&logoColor=white" alt="Official Website" />
+  </a>
+  <br/>
+  <p align="center">
+    <i>Experience the full landing page and feature walkthroughs at <a href="https://meftasadat.github.io/pdf-fusion/">meftasadat.github.io/pdf-fusion/</a></i>
+  </p>
+  <br/>
+</div>
+
+---
+
 ## Key Features
 
 - 📄 **Combine & Merge PDFs** — Bring multiple PDF files together into a single, continuous document with one click.
