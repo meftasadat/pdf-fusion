@@ -63,19 +63,20 @@ struct CombineView: View {
                 }
 
                 // Content
-                ScrollView {
-                    VStack(spacing: 16) {
-                        // Drop Zone
-                        DropZoneView()
+                VStack(spacing: 16) {
+                    // Drop Zone
+                    DropZoneView()
 
-                        // File List
-                        if !viewModel.files.isEmpty {
-                            FileListView()
-                        }
+                    // File List
+                    if !viewModel.files.isEmpty {
+                        FileListView()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else {
+                        Spacer()
                     }
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 16)
                 }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 16)
 
                 // Action Bar
                 if !viewModel.files.isEmpty {

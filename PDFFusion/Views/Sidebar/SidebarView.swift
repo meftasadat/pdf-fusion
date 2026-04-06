@@ -35,8 +35,28 @@ struct SidebarView: View {
 
             Spacer()
 
+            // Buy me a coffee
+            Link(destination: URL(string: "https://buymeacoffee.com/meftasadat")!) {
+                HStack(spacing: 6) {
+                    Image(systemName: "cup.and.saucer.fill")
+                        .foregroundColor(Color(red: 1.0, green: 0.86, blue: 0.0))
+                    Text("Buy me a coffee")
+                        .foregroundColor(.white)
+                }
+                .font(.system(size: 12, weight: .bold))
+                .padding(.vertical, 8)
+                .padding(.horizontal, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.white.opacity(0.08))
+                )
+            }
+            .buttonStyle(.plain)
+            .padding(.bottom, 12)
+
             // Version info
-            Text("v1.0.0")
+            let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+            Text("v\(appVersion)")
                 .font(.system(size: 11))
                 .foregroundColor(.textTertiary)
                 .padding(.bottom, 16)

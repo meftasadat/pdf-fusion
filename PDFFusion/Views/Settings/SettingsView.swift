@@ -90,7 +90,8 @@ struct SettingsView: View {
                                         .font(.system(size: 16, weight: .bold, design: .rounded))
                                         .foregroundColor(.textPrimary)
 
-                                    Text("Version 1.0.0")
+                                    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+                                    Text("Version \(appVersion)")
                                         .font(.system(size: 12))
                                         .foregroundColor(.textSecondary)
                                 }
