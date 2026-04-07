@@ -26,6 +26,21 @@ A lightning-fast, completely native macOS application designed to effortlessly *
 
 ---
 
+<div align="center">
+  <img src="docs/assets/logo.png" alt="PDF Stitch App Icon" width="128" />
+  <br/><br/>
+  <img src="docs/assets/feature_combine.png" alt="PDF Stitch — Combine & Merge PDFs" width="720" />
+  <br/>
+  <em>Seamless document merging with drag-and-drop reordering</em>
+  <br/><br/>
+  <img src="docs/assets/feature_compress.png" alt="PDF Stitch — Intelligent PDF Compression" width="720" />
+  <br/>
+  <em>Smart compression slider with real-time size estimation</em>
+  <br/><br/>
+</div>
+
+---
+
 ## Key Features
 
 - 📄 **Combine & Merge PDFs** — Bring multiple PDF files together into a single, continuous document with one click.
