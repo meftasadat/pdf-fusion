@@ -65,51 +65,38 @@ actor PDFCompressorService {
         for pageIndex in 0..<pageCount {
             guard let page = sourceDocument.page(at: pageIndex) else { continue }
 
-            let pageRect = page.bounds(for: .mediaBox)
+            let pageRect = page.bounds(for: .cropBox)
+            let rotation = page.rotation
+            let isLandscape = rotation == 90 || rotation == 270
+            
+            let actualWidth = isLandscape ? pageRect.height : pageRect.width
+            let actualHeight = isLandscape ? pageRect.width : pageRect.height
 
-            // Bitmap size at target DPI
-            let bitmapWidth = Int(pageRect.width * dpiScale)
-            let bitmapHeight = Int(pageRect.height * dpiScale)
-
-            // Output page size stays the same as original
-            var mediaBox = CGRect(x: 0, y: 0, width: pageRect.width, height: pageRect.height)
+            // Output page size bounds
+            var mediaBox = CGRect(x: 0, y: 0, width: actualWidth, height: actualHeight)
 
             pdfContext.beginPDFPage([
                 kCGPDFContextMediaBox: Data(bytes: &mediaBox, count: MemoryLayout<CGRect>.size) as CFData
             ] as CFDictionary)
 
-            // Step 1: Render the PDF page into a bitmap at target DPI
-            if let bitmapContext = CGContext(
-                data: nil,
-                width: bitmapWidth,
-                height: bitmapHeight,
-                bitsPerComponent: 8,
-                bytesPerRow: 0,
-                space: CGColorSpaceCreateDeviceRGB(),
-                bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
-            ) {
-                // Fill white background
-                bitmapContext.setFillColor(CGColor.white)
-                bitmapContext.fill(CGRect(x: 0, y: 0, width: bitmapWidth, height: bitmapHeight))
+            let targetSize = CGSize(width: actualWidth * dpiScale, height: actualHeight * dpiScale)
+            let nsImage = page.thumbnail(of: targetSize, for: .cropBox)
 
-                // Scale and draw the PDF page into bitmap
-                bitmapContext.scaleBy(x: dpiScale, y: dpiScale)
-                bitmapContext.drawPDFPage(page.pageRef!)
-
-                // Step 2: Get the rendered bitmap
-                if let cgImage = bitmapContext.makeImage() {
-                    // Step 3: Apply JPEG compression to reduce data size
-                    if let compressedImage = Self.jpegCompressedImage(from: cgImage, quality: imageQuality) {
-                        pdfContext.draw(compressedImage, in: mediaBox)
-                    } else {
-                        // Fallback: draw uncompressed bitmap (still reduces resolution)
-                        pdfContext.draw(cgImage, in: mediaBox)
-                    }
+            if let cgImage = nsImage.cgImage(forProposedRect: nil, context: nil, hints: nil) {
+                // Apply JPEG compression to reduce data size
+                if let compressedImage = Self.jpegCompressedImage(from: cgImage, quality: imageQuality) {
+                    pdfContext.draw(compressedImage, in: mediaBox)
+                } else {
+                    pdfContext.draw(cgImage, in: mediaBox)
                 }
             } else {
-                // Fallback: copy page directly if bitmap creation fails
+                // Fallback: copy page directly if bitmap extraction fails
                 if let pageRef = page.pageRef {
+                    pdfContext.saveGState()
+                    // Translate coordinate origin since old PDF may not be at (0,0)
+                    pdfContext.translateBy(x: -pageRect.origin.x, y: -pageRect.origin.y)
                     pdfContext.drawPDFPage(pageRef)
+                    pdfContext.restoreGState()
                 }
             }
 
@@ -196,7 +183,7 @@ actor PDFCompressorService {
 
             for pageIndex in 0..<pageCount {
                 guard let page = sourceDocument.page(at: pageIndex) else { continue }
-                let pageRect = page.bounds(for: .mediaBox)
+                let pageRect = page.bounds(for: .cropBox)
                 var mediaBox = CGRect(origin: .zero, size: pageRect.size)
 
                 pdfContext.beginPDFPage([
@@ -204,7 +191,10 @@ actor PDFCompressorService {
                 ] as CFDictionary)
 
                 if let pageRef = page.pageRef {
+                    pdfContext.saveGState()
+                    pdfContext.translateBy(x: -pageRect.origin.x, y: -pageRect.origin.y)
                     pdfContext.drawPDFPage(pageRef)
+                    pdfContext.restoreGState()
                 }
 
                 pdfContext.endPDFPage()
@@ -241,28 +231,16 @@ actor PDFCompressorService {
 
         let pageCount = document.pageCount
         let dpiScale = settings.targetDPI / 72.0
-        let pageRect = firstPage.bounds(for: .mediaBox)
-        let bitmapWidth = max(1, Int(pageRect.width * dpiScale))
-        let bitmapHeight = max(1, Int(pageRect.height * dpiScale))
+        let pageRect = firstPage.bounds(for: .cropBox)
+        let rotation = firstPage.rotation
+        let isLandscape = rotation == 90 || rotation == 270
 
-        guard let bitmapContext = CGContext(
-            data: nil,
-            width: bitmapWidth,
-            height: bitmapHeight,
-            bitsPerComponent: 8,
-            bytesPerRow: 0,
-            space: CGColorSpaceCreateDeviceRGB(),
-            bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
-        ) else {
-            return Self.fallbackEstimate(originalSize: originalSize, level: settings.compressionLevel)
-        }
+        let actualWidth = isLandscape ? pageRect.height : pageRect.width
+        let actualHeight = isLandscape ? pageRect.width : pageRect.height
+        let targetSize = CGSize(width: actualWidth * dpiScale, height: actualHeight * dpiScale)
 
-        bitmapContext.setFillColor(CGColor.white)
-        bitmapContext.fill(CGRect(x: 0, y: 0, width: bitmapWidth, height: bitmapHeight))
-        bitmapContext.scaleBy(x: dpiScale, y: dpiScale)
-        bitmapContext.drawPDFPage(firstPage.pageRef!)
-
-        guard let cgImage = bitmapContext.makeImage() else {
+        let nsImage = firstPage.thumbnail(of: targetSize, for: .cropBox)
+        guard let cgImage = nsImage.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
             return Self.fallbackEstimate(originalSize: originalSize, level: settings.compressionLevel)
         }
 

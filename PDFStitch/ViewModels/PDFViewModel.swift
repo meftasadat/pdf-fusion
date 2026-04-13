@@ -34,9 +34,18 @@ class PDFViewModel {
     var compressEstimatedSize: Int64 = 0
     var isEstimating: Bool = false
 
+    // Convert tab state
+    var convertInputFile: PDFFileItem? = nil
+    var imageExportSettings = ImageExportSettings()
+    var convertOutputURLs: [URL] = []
+    var convertEstimatedSize: Int64 = 0
+    var convertTotalSize: Int64 = 0
+    var isEstimatingConvert: Bool = false
+
     // MARK: - Services
     private let mergerService = PDFMergerService()
     private let compressorService = PDFCompressorService()
+    private let imageExportService = PDFImageExportService()
 
     // MARK: - Computed Properties
 
@@ -338,6 +347,141 @@ class PDFViewModel {
 
         // Clean up temp file
         try? FileManager.default.removeItem(at: tempURL)
+    }
+
+    // MARK: - Convert (PDF to Images)
+
+    /// Load a file for conversion to images
+    func loadFileForConversion(url: URL) {
+        _ = url.startAccessingSecurityScopedResource()
+        defer { url.stopAccessingSecurityScopedResource() }
+
+        guard let fileItem = PDFFileItem(url: url) else {
+            processingState = .error(message: "Could not read PDF file")
+            return
+        }
+
+        convertInputFile = fileItem
+        convertOutputURLs = []
+        convertTotalSize = 0
+        processingState = .idle
+        progress = 0.0
+
+        updateConvertEstimate()
+    }
+
+    /// Update estimated total image size
+    func updateConvertEstimate() {
+        guard let fileItem = convertInputFile else { return }
+        let fileURL = fileItem.url
+        let settings = imageExportSettings
+        isEstimatingConvert = true
+
+        Task.detached { [weak self] in
+            guard let self = self else { return }
+            let estimate = await self.imageExportService.estimateTotalSize(
+                for: fileURL,
+                settings: settings
+            )
+            await MainActor.run {
+                self.convertEstimatedSize = estimate
+                self.isEstimatingConvert = false
+            }
+        }
+    }
+
+    /// Export PDF pages as images
+    func performImageExport() async {
+        guard let fileItem = convertInputFile else { return }
+
+        let url = fileItem.url
+        _ = url.startAccessingSecurityScopedResource()
+        defer { url.stopAccessingSecurityScopedResource() }
+
+        // Prompt user for output folder
+        let outputDir = await promptFolderPicker(
+            suggestedName: fileItem.fileName.replacingOccurrences(of: ".pdf", with: "", options: .caseInsensitive)
+        )
+        guard let outputDir = outputDir else { return }
+
+        await MainActor.run {
+            processingState = .processing(message: "Converting \(fileItem.pageCount) pages to images...")
+            progress = 0.0
+        }
+
+        do {
+            let prefix = fileItem.fileName
+                .replacingOccurrences(of: ".pdf", with: "", options: .caseInsensitive)
+                .replacingOccurrences(of: " ", with: "_")
+
+            let exportedURLs = try await imageExportService.exportPages(
+                inputURL: url,
+                settings: imageExportSettings,
+                outputDirectory: outputDir,
+                fileNamePrefix: prefix,
+                progress: { [weak self] p in
+                    Task { @MainActor in
+                        self?.progress = p
+                    }
+                }
+            )
+
+            // Calculate total output size
+            let totalSize = exportedURLs.reduce(Int64(0)) { sum, url in
+                sum + (url.fileSize ?? 0)
+            }
+
+            await MainActor.run {
+                convertOutputURLs = exportedURLs
+                convertTotalSize = totalSize
+                progress = 1.0
+                processingState = .success(
+                    message: "Exported \(exportedURLs.count) images (\(totalSize.formattedFileSize))",
+                    outputURL: outputDir
+                )
+            }
+
+            // Reveal in Finder
+            NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: outputDir.path)
+
+        } catch {
+            await MainActor.run {
+                processingState = .error(message: error.localizedDescription)
+                progress = 0.0
+            }
+        }
+    }
+
+    /// Reset convert state completely
+    func resetConvertState() {
+        convertInputFile = nil
+        convertOutputURLs = []
+        convertEstimatedSize = 0
+        convertTotalSize = 0
+        isEstimatingConvert = false
+        processingState = .idle
+        progress = 0.0
+    }
+
+    /// Show a folder picker for image export
+    @MainActor
+    private func promptFolderPicker(suggestedName: String) -> URL? {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.canCreateDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.title = "Choose Export Folder"
+        panel.message = "Select a folder to save the exported images"
+        panel.prompt = "Export Here"
+
+        let response = panel.runModal()
+        if response == .OK, let url = panel.url {
+            // Create a subfolder with the PDF name
+            let subfolder = url.appendingPathComponent(suggestedName)
+            return subfolder
+        }
+        return nil
     }
 
     // MARK: - Dismiss

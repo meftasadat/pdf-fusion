@@ -17,6 +17,8 @@ struct ContentView: View {
                     CombineView()
                 case .compress:
                     CompressView()
+                case .convert:
+                    ConvertView()
                 case .settings:
                     SettingsView()
                 }

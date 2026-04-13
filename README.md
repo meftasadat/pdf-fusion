@@ -45,6 +45,7 @@ A lightning-fast, completely native macOS application designed to effortlessly *
 
 - 📄 **Combine & Merge PDFs** — Bring multiple PDF files together into a single, continuous document with one click.
 - 🗜️ **Advanced PDF Compression** — Reduce PDF file sizes drastically using smart downsampling. Customize DPI and JPEG quality levels to find the perfect balance between clarity and file size.
+- 🖼️ **PDF to Image Conversion** — Export every page of a PDF document as individual high-quality images (PNG or JPEG) with customizable DPI settings.
 - 🎯 **Intuitive Drag & Drop** — Add files instantly by dragging them directly from Finder into the app's drop zone.
 - 🔄 **Reorder Files** — Easily drag-and-drop to rearrange your files into your preferred sequence before merging them.
 - 🌙 **Premium Dark Mode UI** — Enjoy a visually stunning, meticulously designed interface optimized for modern Mac displays.
