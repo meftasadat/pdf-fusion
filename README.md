@@ -10,8 +10,8 @@ A lightning-fast, completely native macOS application designed to effortlessly *
 
 <div align="center">
   <br/>
-  <a href="https://github.com/meftasadat/pdf-stitch/releases/download/v1.1.0/PDFStitch-v1.1.0.dmg">
-    <img src="https://img.shields.io/badge/Download_for_Mac-v1.1.0-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download for Mac" />
+  <a href="https://github.com/meftasadat/pdf-stitch/releases/download/v1.2.0/PDFStitch-v1.2.0.dmg">
+    <img src="https://img.shields.io/badge/Download_for_Mac-v1.2.0-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download for Mac" />
   </a>
   &nbsp;&nbsp;
   <a href="https://meftasadat.github.io/pdf-stitch/">
