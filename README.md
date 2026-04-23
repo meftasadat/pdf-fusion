@@ -67,7 +67,16 @@ brew install --cask pdf-stitch
 1. Go to the [Releases page](https://github.com/meftasadat/pdf-stitch/releases)
 2. Download the latest `.dmg` installer file.
 3. Open the downloaded DMG and drag **PDF Stitch** into your Applications folder.
-4. *Note: As an ad-hoc signed open source project, you'll need to Right-click the app → "Open" on your very first launch.*
+
+> **⚠️ First Launch (Important):** PDF Stitch is an open-source, ad-hoc signed app — macOS Gatekeeper will block it on first open. To launch it:
+>
+> **Option A (Easiest):** Right-click (or Control-click) the app → click **"Open"** → click **"Open"** again in the dialog.
+>
+> **Option B (Terminal):** Run this command once to remove the quarantine flag:
+> ```bash
+> xattr -cr /Applications/PDF\ Stitch.app
+> ```
+> After the first launch, the app will open normally every time.
 
 ## Building from Source
 
